@@ -68,6 +68,4 @@ jobs:
           app-name: 'crop-ally-backend'
           slot-name: 'Production'
           package: .
-           
-      - name: 'start server'
-        run: node server.js
+          
