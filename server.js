@@ -58,4 +58,4 @@ app.get('/connect', (req, res) =>{
   res.send()
 })*/
 
-app.listen(8000)
+app.listen(80)
