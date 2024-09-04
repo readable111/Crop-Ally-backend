@@ -42,9 +42,9 @@ app.get('/profile',requiresAuth(),(req, res)=> {
 });
 
 app.get('/',(req,res)=>{
-  connection.query("SELECT * FROM tbl_subscribers;", (error, results, fields)=>{
+//  connection.query("SELECT * FROM tbl_subscribers;", (error, results, fields)=>{
     res.send("Hello world")
-  })
+  //})
 
 })
 
