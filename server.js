@@ -1,4 +1,4 @@
-var mysql = require('mysql')
+var mysql = require('mysql2')
 const express = require('express')
 const fs = require('fs')
 const crypto = require('crypto')
@@ -22,8 +22,8 @@ const app = express()
 
 
 //app.use(auth(config))
-var connection=mysql.createConnection({
-
+app.use('/',  () =>{
+  var connection=mysql.createConnection({
   host:process.env.DB_HOST_URL, 
   user:process.env.DB_ADMIN_USER, 
   password:process.env.DB_ADMIN_PASSWORD, 
@@ -32,16 +32,17 @@ var connection=mysql.createConnection({
   ssl:{
     ca:fs.readFileSync("./DigiCertGlobalRootCA.crt.pem")
     }
-});
+  });
+})
 
-connection.connect();
+
 app.get('/profile',requiresAuth(),(req, res)=> {
     res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
 });
 
-app.get('/sub',(req,res)=>{
+app.get('/',(req,res)=>{
   connection.query("SELECT * FROM tbl_subscribers;", (error, results, fields)=>{
-    res.json(results)
+    res.send("Hello world")
   })
 
 })
