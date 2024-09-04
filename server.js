@@ -22,7 +22,7 @@ const app = express()
 
 
 //app.use(auth(config))
-app.use('/',  () =>{
+/*app.use('/',  () =>{
   var connection=mysql.createConnection({
   host:process.env.DB_HOST_URL, 
   user:process.env.DB_ADMIN_USER, 
@@ -33,7 +33,7 @@ app.use('/',  () =>{
     ca:fs.readFileSync("./DigiCertGlobalRootCA.crt.pem")
     }
   });
-})
+})*/
 
 
 //connection.connect();
