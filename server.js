@@ -43,7 +43,7 @@ app.get('/sub',(req,res)=>{
   //connection.query("SELECT * FROM tbl_subscribers;", (error, results, fields)=>{
     //res.json(results)
     res.body("Hello world");
-  })
+//})
 
 })
 
