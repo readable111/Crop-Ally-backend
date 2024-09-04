@@ -36,6 +36,7 @@ app.use('/',  () =>{
 })
 
 
+//connection.connect();
 app.get('/profile',requiresAuth(),(req, res)=> {
     res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
 });
@@ -59,4 +60,4 @@ app.get('/connect', (req, res) =>{
   res.send()
 })*/
 
-app.listen(3000)
+app.listen(process.env.PORT)

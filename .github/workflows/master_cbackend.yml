@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy Node.js app to Azure Web App - crop-ally-backend
+name: Build and deploy Node.js app to Azure Web App - cbackend
 
 on:
   push:
@@ -25,7 +25,6 @@ jobs:
         run: |
           npm install
           npm run build --if-present
-
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
@@ -57,15 +56,15 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_3BC9D01BB9DC48509CF9356EA85A24BD }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_B0E47CE3C72C4EBCB8A395C257BE9076 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_BB9267BF93B0467D9E50F59CA44F6E1A }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_D403C3D7FAE64A3F982272E102EF1D44 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_FEF49A6F4F6143FB89DEFD4C75DA881C }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_CF972AECE0C843849B817A51F7B492E0 }}
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'crop-ally-backend'
+          app-name: 'cbackend'
           slot-name: 'Production'
           package: .
           
