@@ -1,4 +1,4 @@
-var mysql = require('mysql')
+var mysql = require('mysql2')
 const express = require('express')
 const fs = require('fs')
 const crypto = require('crypto')
@@ -22,7 +22,7 @@ const app = express()
 
 
 //app.use(auth(config))
-/*app.use('/',  () =>{
+app.use('/',  () =>{
   var connection=mysql.createConnection({
   host:process.env.DB_HOST_URL, 
   user:process.env.DB_ADMIN_USER, 
@@ -33,7 +33,7 @@ const app = express()
     ca:fs.readFileSync("./DigiCertGlobalRootCA.crt.pem")
     }
   });
-})*/
+})
 
 
 //connection.connect();
@@ -42,7 +42,7 @@ app.get('/profile',requiresAuth(),(req, res)=> {
 });
 
 app.get('/',(req,res)=>{
-//  connection.query("SELECT * FROM tbl_subscribers;", (error, results, fields)=>{
+  //connection.query("SELECT * FROM tbl_subscribers;", (error, results, fields)=>{
     res.send("Hello world")
   //})
 
