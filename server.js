@@ -34,14 +34,15 @@ var connection=mysql.createConnection({
     }
 });
 
-connection.connect();
+//connection.connect();
 app.get('/profile',requiresAuth(),(req, res)=> {
     res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
 });
 
 app.get('/sub',(req,res)=>{
-  connection.query("SELECT * FROM tbl_subscribers;", (error, results, fields)=>{
-    res.json(results)
+  //connection.query("SELECT * FROM tbl_subscribers;", (error, results, fields)=>{
+    //res.json(results)
+    res.body("Hello world");
   })
 
 })
