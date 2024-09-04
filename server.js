@@ -1,4 +1,4 @@
-var mysql = require('mysql2')
+var mysql = require('mysql')
 const express = require('express')
 const fs = require('fs')
 const crypto = require('crypto')
