@@ -35,7 +35,6 @@ app.use('/',  () =>{
   });
 })
 
-
 //connection.connect();
 app.get('/profile',requiresAuth(),(req, res)=> {
     res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
