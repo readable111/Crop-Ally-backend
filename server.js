@@ -25,7 +25,7 @@ const app = express()
 //app.use(auth(config))
 */
 const app = express()
-  var connection=mysql.createConnection({
+var connection=mysql.createPool({
 //  host:process.env.DB_HOST_URL, 
   //user:process.env.DB_ADMIN_USER, 
   //password:process.env.DB_ADMIN_PASSWORD, 
@@ -39,37 +39,65 @@ const app = express()
   //  }
   host: 'localhost', // Usually 'localhost' for local instances
   user: 'root',
-  password: 'password',
-  database: 'cropdev'
+  password: 'N0ns3ns3!',
+  database: 'cropdev',
+  waitForConnections: true,
+  connectionLimit: 10,
+  maxIdle: 10,
+  idleTimeout: 60000,
+  queueLimit: 0,
+  enableKeepAlive: true,
+  keepAliveInitialDelay: 0,
 });
-connection.connect();
 
-//app.get('/profile',requiresAuth(),(req, res)=> {
-//    res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
-//});
 
-app.get('/currentDate', (req, res) => {
+app.post('/currentDate', (req, res) => {
       const date = new Date()
       res.send(date.toISOString())
       res.status(200)
 })
-app.get('/', (req, res) => {
-  res.send("Hello World")
+
+app.post('/', (req, res) => {      //once user is logged in, get their subscriber ID, and pass it to the app.
+  let subscriber;
+  const user = req.body["user"]
+  connection.query("SELECT * FROM tbl_subscribers WHERE fld_s_EmailAddr = "+user.email, (err, results, fields) =>{
+    if(err){
+      res.send("no entity found")
+      res.status(404)
+    }else{
+      subscriber = results
+    }
+    res.body = subscriber
+    res.send()
+    res.status(200)
+  })
 })
 
-app.get('/user:home',(req,res)=>{
- // connection.query("SELECT * FROM tbl_subscribers;", (error, results, fields)=>{
-    const user = req.body["user"]
-    const subscriber = connections.query("SELECT fld_s_SubscriberID_pk fld_s_EmailAddr FROM tbl_subscribers WHERE fld_s_EmailAddr = "+user.email)
-    const userLocations = connection.query("SELECT l.fld_l_LocationName, l.fld_l_LocationID, l.fld_s_SubscriberID_pk, c.fld_c_LocationID_fk, c.fld_ct_CropTypeID_fk, c.fld_CropImg, c.fld_c_CropName  FROM tbl_locations AS l INNER JOIN tbl_crops AS c ON  "+ subscriber["fld_s_SubscriberID"]+ " = c.fld_s_SubscriberID_pk, AND l.fld_s_SubscriberID_pk = l.=fld_s_SubscriberID_pk AND c.fld_l_LocationID_fk = l.fld_l_LocationID_pk;")
-    const hasAmbient = connection.query("SELECT fld_s_EmailAddr, fld_s_HasAmbientWeather, fld_s_AmbientWeatherKey FROM tbl_subscribers WHERE "+user.email+"=fld_s_EmailAddr;")
+app.post('/user:home',(req,res)=>{
+  /*
+query to implement once build is ready
+  const user = req.body["user"]
+  const subscriber = req.body["subscriber"]
+  connection.query("SELECT l.fld_l_LocationName, l.fld_l_LocationID, l.fld_s_SubscriberID_pk, c.fld_c_LocationID_fk, c.fld_ct_CropTypeID_fk, c.fld_CropImg, c.fld_c_CropName  FROM tbl_locations AS l INNER JOIN tbl_crops AS c ON  "+ results["subscriber"]["fld_s_SubscriberID"]+ " = c.fld_s_SubscriberID_pk, AND l.fld_s_SubscriberID_pk = l.=fld_s_SubscriberID_pk AND c.fld_l_LocationID_fk = l.fld_l_LocationID_pk;", (err, results, fields)=>{
+  const hasAmbient = connection.query("SELECT fld_s_EmailAddr, fld_s_HasAmbientWeather, fld_s_AmbientWeatherKey FROM tbl_subscribers WHERE "+user.email+"=fld_s_EmailAddr;")
+  userLocations.push(hasAmbient);
+  res.send(JSON(userLocations));*/
+  
+  })*/
 
-    userLocations.push(hasAmbient);
-    res.send(JSON(userLocations));
-  //})
+//query to test endpooint
+   connection.query("SELECT * FROM tbl_crops", (err, results, fields)=>{ 
+      if(err){
+        res.send("entity not found")
+        res.status(404)
+
+      }else{
+        res.json(results)
+      }
+    })
 })
 
-app.get('/user:cropspage', (req, res) =>{
+app.post('/user:cropspage', (req, res) =>{
   const user =req.body["user"]
   const userCrops = connection.query("SELECT  s.fld_s_SubscriberID_pk, c.fld_s_SubscriberID_pk, c.fld_c_CropName, c.fld_c_DatePlanted, c.fld_c_")
 })
