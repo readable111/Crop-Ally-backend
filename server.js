@@ -73,33 +73,51 @@ app.post('/', (req, res) => {      //once user is logged in, get their subscribe
   })
 })
 
-app.post('/user:home',(req,res)=>{
+app.get('/home/:id',(req,res)=>{
   /*
 query to implement once build is ready
-  const user = req.body["user"]
-  const subscriber = req.body["subscriber"]
-  connection.query("SELECT l.fld_l_LocationName, l.fld_l_LocationID, l.fld_s_SubscriberID_pk, c.fld_c_LocationID_fk, c.fld_ct_CropTypeID_fk, c.fld_CropImg, c.fld_c_CropName  FROM tbl_locations AS l INNER JOIN tbl_crops AS c ON  "+ results["subscriber"]["fld_s_SubscriberID"]+ " = c.fld_s_SubscriberID_pk, AND l.fld_s_SubscriberID_pk = l.=fld_s_SubscriberID_pk AND c.fld_l_LocationID_fk = l.fld_l_LocationID_pk;", (err, results, fields)=>{
+  connection.query("SELECT l.fld_l_LocationName, l.fld_l_LocationID, l.fld_s_SubscriberID_pk, c.fld_c_LocationID_fk, c.fld_ct_CropTypeID_fk, c.fld_CropImg, c.fld_c_CropName  FROM tbl_locations AS l INNER JOIN tbl_crops AS c ON  "+ results["subscriber"]["fld_s_SubscriberID"]+ " = c.fld_s_SubscriberID_pk, AND l.fld_s_SubscriberID_pk = l.="+subID+" AND c.fld_l_LocationID_fk = l.fld_l_LocationID_pk;", (err, results, fields)=>{
   const hasAmbient = connection.query("SELECT fld_s_EmailAddr, fld_s_HasAmbientWeather, fld_s_AmbientWeatherKey FROM tbl_subscribers WHERE "+user.email+"=fld_s_EmailAddr;")
   userLocations.push(hasAmbient);
-  res.send(JSON(userLocations));*/
+  res.send(JSON(userLocations));
   
   })*/
 
 //query to test endpooint
-   connection.query("SELECT * FROM tbl_crops", (err, results, fields)=>{ 
+const subID = req.params.id
+   connection.query("SELECT * FROM tbl_crops WHERE fld_s_SubscriberID_pk = "+subID, (err, results, fields)=>{ 
       if(err){
         res.send("entity not found")
         res.status(404)
 
       }else{
-        res.json(results)
       }
     })
 })
 
-app.post('/user:cropspage', (req, res) =>{
-  const user =req.body["user"]
-  const userCrops = connection.query("SELECT  s.fld_s_SubscriberID_pk, c.fld_s_SubscriberID_pk, c.fld_c_CropName, c.fld_c_DatePlanted, c.fld_c_")
+
+app.post('/cropspage:id', (req, res) =>{
+  const subID = req.params.id
+  const userCrops = connection.query("SELECT * FROM tbl_crops WHERE fld_s_SubscriberID_pk = "+subID, (err, res, fields) =>{
+    if(err){
+      res.send("entity not found")
+      res.status(404)
+    }else{
+      res.json(results)
+    }
+  })
+})
+
+
+app.get('/user/:id/viewcrop/:cid', (req, res)=>{
+
+
+})
+
+app.post('addcrop', (req, res) =>{
+  const user = req.body
+
+  connection.query("INSERT INTO tbl_crops")
 })
 
  /* 
