@@ -20,14 +20,12 @@ const mysqlConnectionMiddleWare = async (req, res) =>{
 
 
     const connection = mysql.createConnection({
-    host: process.env.DB_HOST_URL,
-    user: process.env.DB_ADMIN_USER,
+    host: process.env.AZURE_MYSQL_HOST,
+    user: process.env.AZURE_MYSQL_USER,
     password: accessToken.token,
     database: process.env.AZURE_MYSQL_DATABASE,
     port: process.env.AZURE_MYSQL_PORT,
-    ssl: {
-      ca: fs.readFileSync("DigiCertGlobalRootCA.crt.pem")
-    }
+    ssl: process.env.AZURE_MYSQL_SSL
 });
 
   connection.connect((err) => {
