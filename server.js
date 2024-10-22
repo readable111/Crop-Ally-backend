@@ -25,7 +25,9 @@ const mysqlConnectionMiddleWare = async (req, res) =>{
     password: accessToken.token,
     database: process.env.AZURE_MYSQL_DATABASE,
     port: process.env.AZURE_MYSQL_PORT,
-    ssl: process.env.AZURE_MYSQL_SSL
+    ssl: {
+      ca: fs.readFileSync("./DigiCertGlobalRootCA.crt.pem")
+    }
 });
 
   connection.connect((err) => {
