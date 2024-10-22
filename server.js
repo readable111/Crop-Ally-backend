@@ -21,7 +21,7 @@ const mysqlConnectionMiddleWare = async (req, res) =>{
 
     const connection = mysql.createConnection({
     host: process.env.AZURE_MYSQL_HOST,
-    user: process.env.AZURE_MYSQL_USER,
+    user: process.env.AZURE_MYSQL_MYSQL_1ABFF_USER,
     password: accessToken.token,
     database: process.env.AZURE_MYSQL_DATABASE,
     port: process.env.AZURE_MYSQL_PORT,
