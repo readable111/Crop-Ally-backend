@@ -32,7 +32,8 @@ const mysqlConnectionMiddleWare = async (req, res) =>{
 
   connection.connect((err) => {
    if (err) {
-      console.error('Error connecting to MySQL database: ' + err.stack);
+      console.log('Error connecting to MySQL database: ' + err.stack);
+    
       return;
    }
    console.log('Connected to MySQL database');
