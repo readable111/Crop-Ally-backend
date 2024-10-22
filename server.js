@@ -1,12 +1,49 @@
-var mysql = require('mysql2')
+const mysql = require('mysql2')
+const {DefaultAzureCredential, ClientSecretCredential} = require('@azure/identity')
 const express = require('express')
 const fs = require('fs')
 //const crypto = require('crypto')
 const { auth, requiresAuth } = require('express-openid-connect')
 const dotenv = require('dotenv')
 
-//dotenv.config()
+// Uncomment the following lines corresponding to the authentication type you want to use.
+// for system-assigned managed identity
+const mysqlConnectionMiddleWare = async (req, res) =>{
+  try{ 
+    const credential = new DefaultAzureCredential();
 
+    var accessToken =  await credential.getToken('https://ossrdbms-aad.database.windows.net/.default');
+    if(!accessToken || !accessToken.token){
+      throw new Error("Failed to receive access token")
+
+    }
+
+
+    const connection = mysql.createConnection({
+    host: process.env.DB_HOST_URL,
+    user: process.env.DB_ADMIN_USER,
+    password: accessToken.token,
+    database: process.env.AZURE_MYSQL_DATABASE,
+    port: process.env.AZURE_MYSQL_PORT,
+    ssl: {
+      ca: fs.readFileSync("DigiCertGlobalRootCA.crt.pem")
+    }
+});
+
+  connection.connect((err) => {
+   if (err) {
+      console.error('Error connecting to MySQL database: ' + err.stack);
+      return;
+   }
+   console.log('Connected to MySQL database');
+  });
+
+  req.dbConnection = connection
+}catch(error){
+      console.error("Error Acquiring Azure access token or connecting to mysql:" , error)
+      res.status(500).send("Error Acquiring Azure access token or cennecting to mySQL")
+  }
+}
 
 /*const config = {
   authRequired: false,
@@ -25,39 +62,16 @@ const app = express()
 //app.use(auth(config))
 */
 const app = express()
-var connection=mysql.createPool({
-//  host:process.env.DB_HOST_URL, 
-  //user:process.env.DB_ADMIN_USER, 
-  //password:process.env.DB_ADMIN_PASSWORD, 
-  //host: "localhost",
-  //user: "root",
-  //password: "password",
-  //database:"cropdev",
-//  port:3306, 
-//  ssl:{
- //   ca:fs.readFileSync("./DigiCertGlobalRootCA.crt.pem")
-  //  }
-  host: 'localhost', // Usually 'localhost' for local instances
-  user: 'root',
-  password: 'N0ns3ns3!',
-  database: 'cropdev',
-  waitForConnections: true,
-  connectionLimit: 10,
-  maxIdle: 10,
-  idleTimeout: 60000,
-  queueLimit: 0,
-  enableKeepAlive: true,
-  keepAliveInitialDelay: 0,
-});
-
-
-app.post('/currentDate', (req, res) => {
+app.use(mysqlConnectionMiddleWare)
+app.get('/currentDate', (req, res) => {
       const date = new Date()
       res.send(date.toISOString())
       res.status(200)
 })
 
-app.post('/', (req, res) => {      //once user is logged in, get their subscriber ID, and pass it to the app.
+
+
+/*app.post('/', (req, res) => {      //once user is logged in, get their subscriber ID, and pass it to the app.
   let subscriber;
   const user = req.body["user"]
   connection.query("SELECT * FROM tbl_subscribers WHERE fld_s_EmailAddr = "+user.email, (err, results, fields) =>{
@@ -71,15 +85,27 @@ app.post('/', (req, res) => {      //once user is logged in, get their subscribe
     res.send()
     res.status(200)
   })
+})*/
+
+app.get('/editprofile/:subID', (req, res)=>{
+    const subID = req.params.subID
+
+    //QUERY FOR ALL FIELDS ON MATCHING SUBid
+    req.dbConnection.query("SELECT * FROM tbl_subscribers WHERE fld_s_SubscriberID_pk = "+subID, (err, res, fields)=>{
+      if(err){
+        res.send("entity not found")
+        res.status(404)
+      }else{
+        res.json(res)
+        res.status(200)
+      }
+  })
 })
 
 app.get('/home/:id',(req,res)=>{
   /*
 query to implement once build is ready
   connection.query("SELECT l.fld_l_LocationName, l.fld_l_LocationID, l.fld_s_SubscriberID_pk, c.fld_c_LocationID_fk, c.fld_ct_CropTypeID_fk, c.fld_CropImg, c.fld_c_CropName  FROM tbl_locations AS l INNER JOIN tbl_crops AS c ON  "+ results["subscriber"]["fld_s_SubscriberID"]+ " = c.fld_s_SubscriberID_pk, AND l.fld_s_SubscriberID_pk = l.="+subID+" AND c.fld_l_LocationID_fk = l.fld_l_LocationID_pk;", (err, results, fields)=>{
-  const hasAmbient = connection.query("SELECT fld_s_EmailAddr, fld_s_HasAmbientWeather, fld_s_AmbientWeatherKey FROM tbl_subscribers WHERE "+user.email+"=fld_s_EmailAddr;")
-  userLocations.push(hasAmbient);
-  res.send(JSON(userLocations));
   
   })*/
 
@@ -91,12 +117,13 @@ const subID = req.params.id
         res.status(404)
 
       }else{
+        res.json(results)
       }
     })
 })
 
 
-app.post('/cropspage:id', (req, res) =>{
+app.get('/cropspage:id', (req, res) =>{
   const subID = req.params.id
   const userCrops = connection.query("SELECT * FROM tbl_crops WHERE fld_s_SubscriberID_pk = "+subID, (err, res, fields) =>{
     if(err){
@@ -114,10 +141,11 @@ app.get('/user/:id/viewcrop/:cid', (req, res)=>{
 
 })
 
-app.post('addcrop', (req, res) =>{
-  const user = req.body
+app.post('/addcrop', (req, res) =>{
+  const subID = req.body.subID
+  const cropData = req.body.cropData
 
-  connection.query("INSERT INTO tbl_crops")
+  connection.query("INSERT INTO tbl_crops(fld_c_CropID_pk, fld_s_SubscriberID_pk, fld_c_ZipCode, fld_c_State, fld_f_FarmID_fk, fld_m_MediumID_fk, fld_l_LocationID_fk, fld_ct_CropTypeID_fk, fld_CropImg, fld_c_HRFNumber, fld_c_CropName, fld_c_Variety, fld_c_Source, fld_c_DatePlanted, fld_c_Comments, fld_c_Yeild, fld_c_WasStartedIndoors, fld_c_isActive")// finish said query
 })
 
  /* 
