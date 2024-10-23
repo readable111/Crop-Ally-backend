@@ -30,15 +30,6 @@ const mysqlConnectionMiddleWare = async (req, res) =>{
     }
 });
 
-  connection.connect((err) => {
-   if (err) {
-      console.log('Error connecting to MySQL database: ' + err.stack);
-    
-      return;
-   }
-   console.log('Connected to MySQL database');
-  });
-
   req.dbConnection = connection
 }catch(error){
       console.log("Error Acquiring Azure access token or connecting to mysql:" , error)
