@@ -41,7 +41,7 @@ const mysqlConnectionMiddleWare = async (req, res) =>{
 
   req.dbConnection = connection
 }catch(error){
-      console.error("Error Acquiring Azure access token or connecting to mysql:" , error)
+      console.log("Error Acquiring Azure access token or connecting to mysql:" , error)
       res.status(500).send("Error Acquiring Azure access token or cennecting to mySQL")
   }
 }
