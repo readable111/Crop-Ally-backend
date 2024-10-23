@@ -70,7 +70,9 @@ app.get('/currentDate', (req, res) => {
       res.status(200)
 })
 
-
+app.get('/', (req, res)=>{
+  res.send("app working")
+})
 
 /*app.post('/', (req, res) => {      //once user is logged in, get their subscriber ID, and pass it to the app.
   let subscriber;
