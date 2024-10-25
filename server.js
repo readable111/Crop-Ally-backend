@@ -52,6 +52,7 @@ const mysqlConnectionMiddleWare = async (req, res) =>{
 
 
 //app.use(auth(config))
+dotenv.config()
 const app = express()
 
 app.get('/', (req, res)=>{
