@@ -8,6 +8,7 @@ const dotenv = require('dotenv')
 
 // Uncomment the following lines corresponding to the authentication type you want to use.
 // for system-assigned managed identity
+/*
 const mysqlConnectionMiddleWare = async (req, res) =>{
   try{ 
     const credential = new DefaultAzureCredential();
@@ -45,15 +46,20 @@ const mysqlConnectionMiddleWare = async (req, res) =>{
   clientID: process.env.CLIENT_ID,
   issuerBaseURL: process.env.ISSUER_BASE_URL
 };
-
-const app = express() 
+*/
 
 
 
 
 //app.use(auth(config))
-*/
 const app = express()
+
+app.get('/', (req, res)=>{
+  res.send("is this thing on?")
+})
+
+app.listen(process.env.PORT)
+/*
 app.use(mysqlConnectionMiddleWare)
 app.get('/currentDate', (req, res) => {
       const date = new Date()
@@ -81,6 +87,8 @@ app.get('/', (req, res)=>{
   })
 })*/
 
+/*
+
 app.get('/editprofile/:subID', (req, res)=>{
     const subID = req.params.subID
 
@@ -104,6 +112,7 @@ query to implement once build is ready
   })*/
 
 //query to test endpooint
+/*
 const subID = req.params.id
    connection.query("SELECT * FROM tbl_crops WHERE fld_s_SubscriberID_pk = "+subID, (err, results, fields)=>{ 
       if(err){
@@ -153,5 +162,5 @@ app.get('/connect', (req, res) =>{
   res.send()
 })*/
 
-app.listen(process.env.PORT)
+//app.listen(process.env.PORT)
 
