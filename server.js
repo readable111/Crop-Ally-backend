@@ -8,7 +8,7 @@ const dotenv = require('dotenv')
 
 // Uncomment the following lines corresponding to the authentication type you want to use.
 // for system-assigned managed identity
-/*
+
 const mysqlConnectionMiddleWare = async (req, res) =>{
   try{ 
     const credential = new DefaultAzureCredential();
@@ -22,7 +22,7 @@ const mysqlConnectionMiddleWare = async (req, res) =>{
 
     const connection = mysql.createPool({
     host: process.env.AZURE_MYSQL_HOST,
-    user: process.env.AZURE_MYSQL_MYSQL_1ABFF_USER,
+    user: process.env.AZURE_MYSQL_USER,
     password: accessToken.token,
     database: process.env.AZURE_MYSQL_DATABASE,
     port: process.env.AZURE_MYSQL_PORT,
@@ -63,9 +63,7 @@ app.get('/currentDate', (req, res) => {
       res.status(200)
 })
 
-app.get('/', (req, res)=>{
-  res.send("app working")
-})
+
 
 /*app.post('/', (req, res) => {      //once user is logged in, get their subscriber ID, and pass it to the app.
   let subscriber;
@@ -82,7 +80,7 @@ app.get('/', (req, res)=>{
     res.status(200)
   })
 })
-
+*/
 
 app.get('/editprofile/:subID', (req, res)=>{
     const subID = req.params.subID
@@ -103,7 +101,7 @@ app.get('/home/:id',(req,res)=>{
 /*query to implement once build is ready
   connection.query("SELECT l.fld_l_LocationName, l.fld_l_LocationID, l.fld_s_SubscriberID_pk, c.fld_c_LocationID_fk, c.fld_ct_CropTypeID_fk, c.fld_CropImg, c.fld_c_CropName  FROM tbl_locations AS l INNER JOIN tbl_crops AS c ON  "+ results["subscriber"]["fld_s_SubscriberID"]+ " = c.fld_s_SubscriberID_pk, AND l.fld_s_SubscriberID_pk = l.="+subID+" AND c.fld_l_LocationID_fk = l.fld_l_LocationID_pk;", (err, results, fields)=>{
   
-  })
+  })*/
 
 //query to test endpooint
 const subID = req.params.id
@@ -154,10 +152,9 @@ app.get('/connect', (req, res) =>{
   res.status(200)
   res.send()
 })
-*/
-const app = express()
+
+
 app.get('/', (req, res)=>{
   res.send("this thing on?")
 })
 app.listen(process.env.PORT)
-
