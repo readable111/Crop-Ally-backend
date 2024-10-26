@@ -38,7 +38,7 @@ const mysqlConnectionMiddleWare = async (req, res) =>{
   }
 }
 
-/*const config = {
+const config = {
   authRequired: false,
   auth0Logout: true,
   secret: 'a long, randomly-generated string stored in env',
@@ -46,12 +46,9 @@ const mysqlConnectionMiddleWare = async (req, res) =>{
   clientID: process.env.CLIENT_ID,
   issuerBaseURL: process.env.ISSUER_BASE_URL
 };
-*/
 
 
 
-
-//app.use(auth(config))
 dotenv.config()
 const app = express()
 
@@ -59,8 +56,6 @@ app.get('/', (req, res)=>{
   res.send("is this thing on?")
 })
 
-app.listen(process.env.PORT)
-/*
 app.use(mysqlConnectionMiddleWare)
 app.get('/currentDate', (req, res) => {
       const date = new Date()
@@ -86,9 +81,8 @@ app.get('/', (req, res)=>{
     res.send()
     res.status(200)
   })
-})*/
+})
 
-/*
 
 app.get('/editprofile/:subID', (req, res)=>{
     const subID = req.params.subID
@@ -106,14 +100,12 @@ app.get('/editprofile/:subID', (req, res)=>{
 })
 
 app.get('/home/:id',(req,res)=>{
-  /*
-query to implement once build is ready
+/*query to implement once build is ready
   connection.query("SELECT l.fld_l_LocationName, l.fld_l_LocationID, l.fld_s_SubscriberID_pk, c.fld_c_LocationID_fk, c.fld_ct_CropTypeID_fk, c.fld_CropImg, c.fld_c_CropName  FROM tbl_locations AS l INNER JOIN tbl_crops AS c ON  "+ results["subscriber"]["fld_s_SubscriberID"]+ " = c.fld_s_SubscriberID_pk, AND l.fld_s_SubscriberID_pk = l.="+subID+" AND c.fld_l_LocationID_fk = l.fld_l_LocationID_pk;", (err, results, fields)=>{
   
-  })*/
+  })
 
 //query to test endpooint
-/*
 const subID = req.params.id
    connection.query("SELECT * FROM tbl_crops WHERE fld_s_SubscriberID_pk = "+subID, (err, results, fields)=>{ 
       if(err){
@@ -152,7 +144,7 @@ app.post('/addcrop', (req, res) =>{
   connection.query("INSERT INTO tbl_crops(fld_c_CropID_pk, fld_s_SubscriberID_pk, fld_c_ZipCode, fld_c_State, fld_f_FarmID_fk, fld_m_MediumID_fk, fld_l_LocationID_fk, fld_ct_CropTypeID_fk, fld_CropImg, fld_c_HRFNumber, fld_c_CropName, fld_c_Variety, fld_c_Source, fld_c_DatePlanted, fld_c_Comments, fld_c_Yeild, fld_c_WasStartedIndoors, fld_c_isActive")// finish said query
 })
 
- /* 
+
 app.get('/connect', (req, res) =>{
 
   connection.query('SELECT * FROM tbl_subscribers;', (error, results, fields)=>{
@@ -161,7 +153,11 @@ app.get('/connect', (req, res) =>{
   })
   res.status(200)
   res.send()
-})*/
-
-//app.listen(process.env.PORT)
+})
+*/
+const app = express()
+app.get('/', (req, res)=>{
+  res.send("this thing on?")
+})
+app.listen(process.env.PORT)
 
