@@ -11,19 +11,11 @@ const dotenv = require('dotenv')
 
 const mysqlConnectionMiddleWare = async (req, res) =>{
   try{ 
-    const credential = new DefaultAzureCredential();
-
-    var accessToken =  await credential.getToken('https://ossrdbms-aad.database.windows.net/.default');
-    if(!accessToken || !accessToken.token){
-      throw new Error("Failed to receive access token")
-
-    }
-
 
     const connection = mysql.createPool({
     host: process.env.AZURE_MYSQL_HOST,
     user: process.env.AZURE_MYSQL_USER,
-    password: accessToken.token,
+    password: AZURE_MYSQL_PASSWORD,
     database: process.env.AZURE_MYSQL_DATABASE,
     port: process.env.AZURE_MYSQL_PORT,
     ssl: {
@@ -142,6 +134,10 @@ app.post('/addcrop', (req, res) =>{
   connection.query("INSERT INTO tbl_crops(fld_c_CropID_pk, fld_s_SubscriberID_pk, fld_c_ZipCode, fld_c_State, fld_f_FarmID_fk, fld_m_MediumID_fk, fld_l_LocationID_fk, fld_ct_CropTypeID_fk, fld_CropImg, fld_c_HRFNumber, fld_c_CropName, fld_c_Variety, fld_c_Source, fld_c_DatePlanted, fld_c_Comments, fld_c_Yeild, fld_c_WasStartedIndoors, fld_c_isActive")// finish said query
 })
 
+
+app.get('/test', (req, res)=>{
+  req.dbConnection.connection
+})
 
 app.get('/connect', (req, res) =>{
 
