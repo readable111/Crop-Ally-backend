@@ -149,4 +149,10 @@ app.get('/connect', (req, res) =>{
 app.get('/', (req, res)=>{
   res.send("this thing on?")
 })
+
+app.use((req, res, next) => {
+  res.status(404).send('Sorry, can\'t find that!');
+});
+
+
 app.listen(process.env.PORT)
