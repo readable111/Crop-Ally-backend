@@ -44,10 +44,6 @@ const config = {
 dotenv.config()
 const app = express()
 
-app.get('/', (req, res)=>{
-  res.send("is this thing on?")
-})
-
 app.use(mysqlConnectionMiddleWare)
 app.get('/currentDate', (req, res) => {
       const date = new Date()
